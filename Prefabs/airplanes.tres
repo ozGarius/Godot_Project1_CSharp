@@ -1,0 +1,37 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=2]
+
+[ext_resource path="res://Assets/Planes/planeBlue3.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Planes/planeBlue2.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Planes/planeBlue1.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Planes/planeGreen2.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Planes/planeRed1.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Planes/planeRed3.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Planes/planeGreen1.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Planes/planeGreen3.png" type="Texture" id=8]
+[ext_resource path="res://Assets/Planes/planeRed2.png" type="Texture" id=9]
+[ext_resource path="res://Assets/Planes/planeYellow2.png" type="Texture" id=10]
+[ext_resource path="res://Assets/Planes/planeYellow3.png" type="Texture" id=11]
+[ext_resource path="res://Assets/Planes/planeYellow1.png" type="Texture" id=12]
+
+[resource]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 2 ), ExtResource( 1 ) ],
+"loop": true,
+"name": "blue",
+"speed": 24.0
+}, {
+"frames": [ ExtResource( 7 ), ExtResource( 4 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "green",
+"speed": 24.0
+}, {
+"frames": [ ExtResource( 5 ), ExtResource( 9 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "red",
+"speed": 24.0
+}, {
+"frames": [ ExtResource( 12 ), ExtResource( 10 ), ExtResource( 11 ) ],
+"loop": true,
+"name": "yellow",
+"speed": 24.0
+} ]
