@@ -1,0 +1,14 @@
+Vile Management (VFX file management)
+very beta version
+
+
+Usage:
+edit "setup_project.yml" and "setup_shotfolder.yml" to your liking
+
+Linux:
+./.venv/Scripts/activate
+python create.py
+
+Windows:
+./.venv/Scripts/activate.bat
+python create.py
