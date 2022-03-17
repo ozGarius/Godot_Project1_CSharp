@@ -96,7 +96,7 @@ def findShotNumber(file):
 
 
 def recursiveStructure(
-    structure: dict, folder: Path(), project: dict, shot_number: int, sequence
+    structure: dict, folder: Path(), project: dict, episode, sequence, shot_number
 ):
   """ this calls a function to create folders recursively """
   # keys = [k for k in structure]
@@ -104,30 +104,25 @@ def recursiveStructure(
     log.debug(f"KEY: {key} - VALUE: {value}")
     if value is None:
       # This is an empty folder.
-      makeStructure('folder', key, folder, project, shot_number, sequence)
+      makeStructure('folder', key, folder, project, episode, sequence, shot_number)
     else:
       # If the key name contains "act" is a call to action
       if "act" in key:
         makeStructure(
-            value['action'], value, folder, project, shot_number, sequence
+            value['action'], value, folder, project, episode, sequence, shot_number
         )
       else:
         # If it's not an action, it is a folder with more stuff to do in it
         new_folder = makeStructure(
-            "folder", key, folder, project, shot_number, sequence
+            "folder", key, folder, project, episode, sequence, shot_number
         )
-        recursiveStructure(value, new_folder, project, shot_number, sequence)
+        recursiveStructure(value, new_folder, project, episode, sequence, shot_number)
   # -------------------------------------------------------------------------
 
 
 def makeStructure(
-    action: str, item, folder, project: dict, shot_number, sequence
+    action: str, item, folder, project: dict, episode, sequence, shot_number
 ):
-  episode_number = f"{int(project['episode_number']):03d}"
-  shot_number = f"{int(shot_number):03d}"
-  if type(sequence) == int:
-    sequence = f"{int(sequence):03d}"
-
   log.debug("makeStructure: received")
   log.debug(f"action {action}\nitem {item}")
   # check if the item is a dictionary, then extract name
@@ -140,7 +135,7 @@ def makeStructure(
     name = item
   # get a complete name if it contains "variables"
   if "$" in name:
-    name = parseName(name, project, shot_number, sequence)
+    name = parseName(name, project, episode, sequence, shot_number)
   # The core of the function
   if action == "folder":
     item = Path.joinpath(folder, name)
@@ -160,14 +155,14 @@ def makeStructure(
       copyFolder(folder, item['from'])
     return folder
 
-  # -------------------------------------------------------------------------
 
 
-def parseName(name: str, project_data: dict, shot_number, sequence):
+def parseName(name: str, project_data: dict, episode, sequence, shot_number):
   """Given a string containing:
         $project_name$
         $short_projects$
         $episode$
+        $sequence$
         $shot$
     It will replace those variables with the correct project information.
 
@@ -180,18 +175,19 @@ def parseName(name: str, project_data: dict, shot_number, sequence):
         str -- parsed name
     """
   short_project = project_data['short_project_name'].upper()
-  episode_number = f"{int(project_data['episode_number']):03d}"
-  if type(shot_number) == int:
-    shot_number = f"{int(shot_number):03d}"
+  if type(episode) == int:
+    episode = f"{int(episode):03d}"
   if type(sequence) == int:
     sequence = f"{int(sequence):03d}"
+  if type(shot_number) == int:
+    shot_number = f"{int(shot_number):03d}"
 
   if "$project_name$" in name:
     name = name.replace("$project_name$", project_data['project_name'])
   if "$short_project$" in name:
     name = name.replace("$short_project$", short_project)
   if "$episode$" in name:
-    name = name.replace("$episode$", episode_number)
+    name = name.replace("$episode$", episode)
   if "$shot$" in name:
     name = name.replace("$shot$", shot_number)
   if "$sequence$" in name:
@@ -222,11 +218,14 @@ if __name__ == '__main__':
   project['footage_path'] = project['project_path'] / project['footage_path']
 
   shotfolder_structure = readFile("setup_shotfolder.yml")
+  log.debug(f"shotfolder_structure: {shotfolder_structure}")
 
-  for i in project['shot_number']:
-    recursiveStructure(
-        shotfolder_structure, project['comps_path'], project, i,
-        project['sequence']
-    )
+  if project['csv_file'] is not None:
+    project['sequences&shots'] = readFile(project['csv_file'])
 
-  log.debug(shotfolder_structure)
+  for k_episode, v_sequences in project['sequences&shots'].items():
+    for k_sequence, v_shots in v_sequences.items():
+      for shot in v_shots:
+        recursiveStructure(
+            shotfolder_structure, project['comps_path'], project, k_episode, k_sequence, shot
+        )

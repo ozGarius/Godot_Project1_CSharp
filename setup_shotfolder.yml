@@ -1,16 +1,17 @@
 # Instructions on how to create a folder structure per shot.
 # Valid variables are:
-#   $project_name$
-#   $short_project$
-#   $episode$
-#   $shot$
+#   $project_name$    Full project name
+#   $short_project$   3 letters UPPERCASE name of project
+#   $episode$       
 #   $sequence$
+#   $shot$
 
-$short_project$_$episode$_$sequence$_$shot$:
-  render:
-    $short_project$_$episode$_$sequence$_$shot$_comp_v001:
-  scripts:
-    act1:
-      action: copy file
-      name: $short_project$_$episode$_$episode$_$shot$_comp_v001.nk
-      from: /mnt/gluster/PUV/201/PUV_201_000_010/scripts/PUV_201_000_010_comp_v001.nk
+$episode$:
+  $short_project$_$episode$_$sequence$_$shot$:
+    render:
+      $short_project$_$episode$_$sequence$_$shot$_comp_v001:
+    scripts:
+      act1:
+        action: copy file
+        name: $short_project$_$episode$_$sequence$_$shot$_comp_v001.nk
+        from: /mnt/gluster/PUV/201/PUV_201_060_100/scripts/PUV_201_060_100_comp_v001.nk

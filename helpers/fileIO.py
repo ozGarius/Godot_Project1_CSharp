@@ -3,6 +3,8 @@ import pickle
 import yaml
 import jsons
 import shutil
+import csv
+import re
 
 from yaml import load, dump
 
@@ -53,7 +55,7 @@ def saveFile(file, data):
 def readFile(file):
   """A simple way to read different kind of files based on their extensions. It will convert the data back to Python usable.
 
-    Supported file types are: ["json", "yaml", "yml, "dat" (as pickle), "pickle"]
+    Supported file types are: ["json", "yaml", "yml, "dat" (as pickle), "pickle", "csv"]
 
     Keyword Arguments:
         file {Path} -- A file to read.
@@ -71,6 +73,9 @@ def readFile(file):
     elif PureWindowsPath(file).suffix in [".yaml", ".yml"]:
       with open(file, "r") as stream:
         file_data = yaml.load(stream, Loader=Loader)
+    elif PureWindowsPath(file).suffix in [".csv"]:
+      with open(file, newline='') as stream:
+        file_data = parse_csv(stream)
     return file_data
   except Exception as e:
     log.error(e)
@@ -118,3 +123,23 @@ def copyFolder(path: Path(), original_file: Path(), force: bool = False):
   else:
     log.warning(f"CP DIR: directory already exists.\n{path}")
     return False
+
+
+def parse_csv(stream):
+  reader = csv.DictReader(stream)
+
+  # Set new dictionary
+  proj_dict = {}
+  episode_dict={}
+  shot_list=[]
+
+  for row in reader:
+      for k, v in row.items():
+          if k.lower() == 'shot':
+              results = re.match(r"(\w{3})_(\d{3})_(\d{3})_(\d{3})", v)
+              shot_list.append(results.group(4))
+              episode_dict[results.group(3)] = shot_list
+              proj_dict[results.group(2)] = episode_dict
+              short_project_name = results.group(1)
+              
+  return proj_dict

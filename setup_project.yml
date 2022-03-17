@@ -1,15 +1,23 @@
 # Project variables.
 project_name: Pvalley
 short_project_name: PUV # Usually a 3 letters short version of the project name, all uppercase
-episode_number: 203
 # Paths related to the project
 
-project_path: /mnt/gluster/PUV/203/ # make sure this is an absolute path or relative to this file
+project_path: /mnt/gluster/PUV/ # make sure this is an absolute path or relative to this file
 footage_path: "" # relative to the project path
 comps_path: "" # relative to the project path
 
-# You can create multiple shots by adding numbers to the list "shot_number"
-# they have to be integers for now
-shot_number: [35] # they have to be integers
-shot_letter: null # function notyet implemented
-sequence: 24 # this can be a number or a series of letters
+# If you have a CSV file name it here.
+csv_file: PUV203-test.csv
+
+# Otherwise manually add episodes, sequences and shots here
+# episode:
+#   sequence1: [shot1, shot2, shot3, shot4]
+#   sequence2: [shot1, shot2, shot3, shot4]
+sequences&shots:
+  998:
+    1: [0,1,2,3]
+    2: ["AAA", "BBB", "CCC"]
+  999:
+    1: [0,1,2,3]
+    2: ["AAA", "BBB", "CCC"]
